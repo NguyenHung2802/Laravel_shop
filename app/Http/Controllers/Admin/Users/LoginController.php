@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Users;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -15,19 +16,22 @@ class LoginController extends Controller
     }
 
     public function store(Request $request){
+        // dd($request->input());
         $this -> validate($request, [
             'email' => 'required|email:filter',
-            'password' => 'required|password:filter',
+            'password' => 'required',
         ]);
 
-        if ( Auth::attempt([
+        if (Auth::attempt([
                 'email' => $request -> input('email'),
                 'password' => $request -> input('password')
             ], $request -> input('remember'))){
-
-            return redirect()->route('admin');
+            // Đăng nhập thành công, chuyển sang trang admin
+            return redirect()->back();
         }
 
-        return redirect()  -> back();
+        Session::flash('error', 'email hoặc mật khẩu không chính xác');
+
+        return redirect() -> route('admin');
     }
 }
