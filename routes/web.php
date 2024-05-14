@@ -20,6 +20,8 @@ Route::prefix('admin')->group(function(){
     #menu
     Route::prefix('menus')->group(function(){
         Route::get('add',[MenuController::class, 'create']);
+        Route::post('add',[MenuController::class, 'store']);
+        Route::match(['get', 'post'], '/', [MenuController::class, 'handleRequest']);
     });
 });
 
